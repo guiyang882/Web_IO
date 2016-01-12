@@ -239,14 +239,10 @@ void MyHttpRequest::demo_get_query(){
     exit(0);
 }
 
-void MyHttpRequest::demo_send_type(string send_type){
+void MyHttpRequest::send_data_diff_type(string send_type,string ip,int port,string prefix,string content){
     int sockfd;
     struct sockaddr_in serv_socket;
-    int port = 8080;
-
-    string ip = "127.0.0.1";
     string file_loc = "";
-
     bzero(&serv_socket, sizeof(struct sockaddr_in));
     serv_socket.sin_family = AF_INET;
     serv_socket.sin_port = htons(port);
@@ -259,9 +255,15 @@ void MyHttpRequest::demo_send_type(string send_type){
         perror("connect error!!!");
         exit(1);
     }
-    string post_data = "name=lgy@163.com";
-    this->instance_req_header(ip,port,"/",send_type,post_data);
-    this->send_and_recv(sockfd,file_loc);
+    string post_data;
+    if(send_type == "POST"){
+        post_data = content;
+    }else{
+        prefix = prefix + "?" +UrlEncode(content);
+        post_data = "";
+    }
+    instance_req_header(ip,port,prefix,send_type,post_data);
+    send_and_recv(sockfd,file_loc);
     close(sockfd);
     exit(0);
 }

@@ -65,11 +65,11 @@ public:
 
     bool download_url(string host,string url,string save_file);
     void single_connection(int id);
+    void send_data_diff_type(string send_type, string ip, int port, string prefix="/", string content="");
 
 public:
     void demo_download_baidu();
     void demo_get_query();
-    void demo_send_type(string send_type);
 
 protected:
     void write_log(LOG_LEVEL log_level,string info){

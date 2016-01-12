@@ -13,7 +13,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     cmdline::parser a;
-    a.add<string>("host", 'h', "host name", false, "www.baidu.com");
+    a.add<string>("host", 'h', "host name or ip", false, "www.baidu.com");
     a.add<int>("port", 'p', "port number", false, 80, cmdline::range(1, 65535));
     a.add<int>("delay", 'd', "each connect delay time ms", false, 50, cmdline::range(1, 65535));
     a.add<int>("n_users", 'n', "user number", false, 50, cmdline::range(1, 2000));
@@ -22,13 +22,14 @@ int main(int argc, char *argv[])
     a.add<string>("savefile", 's', "download file save path", false, "temp.html");
     a.add<string>("type", 't', "data send type", false, "GET", cmdline::oneof<string>("GET","POST"));
     a.add<string>("mode",'m',"pressure tesing mode",true,"connect",cmdline::oneof<string>("connect","download","sendtype"));
+    a.add<string>("prefix",'P',"get or post prefix info",false,"/");
+    a.add<string>("info",'i',"send info use post or get type",false,"");
     a.parse_check(argc, argv);
 
     string mode = a.get<string>("mode");
     MyHttpRequest obj;
     if(mode == "connect"){
         string host = a.get<string>("host");
-        int port = a.get<int>("port");
         int n_users = a.get<int>("n_users");
         int n_visit = a.get<int>("n_visit");
         int delay = a.get<int>("delay");
@@ -42,7 +43,12 @@ int main(int argc, char *argv[])
         obj.download_url(host,url,save_file);
     }
     if(mode == "sendtype"){
-        
+        string send_type = a.get<string>("type");
+        string prefix = a.get<string>("prefix");
+        string content = a.get<string>("info");
+        string ip = a.get<string>("host");
+        int port = a.get<int>("port");
+        obj.send_data_diff_type(send_type,ip,port,prefix,content);
     }
 
     /*

@@ -4,7 +4,7 @@
 fighter@ubuntu:~/Documents/Web_IO$ ./pressure -?
 usage: ./pressure --mode=string [options] ... 
 options:
-  -h, --host        host name (string [=www.baidu.com])
+  -h, --host        host name or ip (string [=www.baidu.com])
   -p, --port        port number (int [=80])
   -d, --delay       each connect delay time ms (int [=50])
   -n, --n_users     user number (int [=50])
@@ -13,6 +13,8 @@ options:
   -s, --savefile    download file save path (string [=temp.html])
   -t, --type        data send type (string [=GET])
   -m, --mode        pressure tesing mode (string)
+  -P, --prefix      get or post prefix info (string [=/])
+  -i, --info        send info use post or get type (string [=])
   -?, --help        print this message
 ```
 
@@ -255,4 +257,109 @@ Expires: Tue, 12 Jan 2016 14:00:05 GMT
 Vary: Accept-Encoding,User-Agent
 Connection: Close
 Content-Type: text/html
+```
+
+## GET or POST
+先启动本地的server.py
+
+```
+fighter@ubuntu:~/Documents/Web_IO$ python server.py 
+http://0.0.0.0:8080/
+127.0.0.1:56758 - - [12/Jan/2016 22:25:56] "HTTP/1.1 GET /" - 200 OK
+```
+
+然后在运运行我们的测试脚本GET
+
+```
+fighter@ubuntu:~/Documents/Web_IO$ ./pressure -m sendtype -h 127.0.0.1 -p 8080 
+GET /? HTTP/1.1
+Host: 127.0.0.1:8080
+Connection: Close
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/47.0.2526.73 Chrome/47.0.2526.73 Safari/537.36
+
+
+	***********************Request Header************************
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 12 Jan 2016 14:25:56 GMT
+Server: localhost
+
+
+1c
+{"status": 0, "msg": "OK !"}
+0
+
+rigin: *
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 12 Jan 2016 14:25:56 GMT
+Server: localhost
+
+
+1c
+{"status": 0, "msg": "OK !"}
+0
+
+rigin: *
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 12 Jan 2016 14:25:56 GMT
+Server: localhost
+```
+
+运行POST测试
+
+```
+fighter@ubuntu:~/Documents/Web_IO$ python server.py 
+http://0.0.0.0:8080/
+127.0.0.1:56758 - - [12/Jan/2016 22:25:56] "HTTP/1.1 GET /" - 200 OK
+<Storage {'nsfkjdshfkhskjfdhajsdf': u''}>
+127.0.0.1:56778 - - [12/Jan/2016 22:29:19] "HTTP/1.1 POST /" - 200 OK
+```
+
+测试代码运行结果
+```
+fighter@ubuntu:~/Documents/Web_IO$ ./pressure -m sendtype -h 127.0.0.1 -p 8080 -t POST -i nsfkjdshfkhskjfdhajsdf
+POST / HTTP/1.1
+Host: 127.0.0.1:8080
+Connection: Close
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/47.0.2526.73 Chrome/47.0.2526.73 Safari/537.36
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 22
+
+nsfkjdshfkhskjfdhajsdf
+	***********************Request Header************************
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: content-type
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 12 Jan 2016 14:29:19 GMT
+Server: localhost
+
+
+1b
+{"status": 0, "msg": "OK!"}
+0
+
+Origin: *
+Access-Control-Allow-Headers: content-type
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 12 Jan 2016 14:29:19 GMT
+Server: localhost
+
+
+1b
+{"status": 0, "msg": "OK!"}
+0
+
+Origin: *
+Access-Control-Allow-Headers: content-type
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 12 Jan 2016 14:29:19 GMT
+Server: localhost
 ```
