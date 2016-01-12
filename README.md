@@ -5,6 +5,9 @@
 fighter@ubuntu:~/Documents/Web_IO$ ./compile.sh
 ```
 
+## 结果说明
+部分测试结果，请见文件中的三个log日志文件,具体的曲线请使用excel自行处理
+
 ## 使用说明
 ```
 fighter@ubuntu:~/Documents/Web_IO$ ./pressure -?
