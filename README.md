@@ -1,4 +1,10 @@
 # 网站压力测试
+
+## 使用相应的命令进行编译
+```
+fighter@ubuntu:~/Documents/Web_IO$ ./compile.sh
+```
+
 ## 使用说明
 ```
 fighter@ubuntu:~/Documents/Web_IO$ ./pressure -?
